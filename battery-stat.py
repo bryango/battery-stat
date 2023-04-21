@@ -1,16 +1,7 @@
 #!/usr/bin/env python3
 # Battery statistics
 
-
 # %% Setup
-from pathlib import Path
-from datetime import datetime, timedelta
-import math as m
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-from matplotlib.widgets import Slider, Button, RadioButtons
-# import sys
-
 BATTERY_HISTORY_FILE_GLOB = "history-charge-*"
 BATTERY_STAT_PATH = "/var/lib/upower/"
 BATTERY_MAX_CHARGE = 85
@@ -18,6 +9,15 @@ BATTERY_MAX_CHARGE = 85
 PLOT_RANGE = 36
 DEFAULT_HISTORY_MIN = 0
 DEFAULT_HISTORY_MAX = 12
+
+
+from pathlib import Path
+from datetime import datetime, timedelta
+import math as m
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib.widgets import Slider, Button, RadioButtons  # type: ignore
+# import sys
 
 AN_HOUR = timedelta(hours=1)
 A_DAY = timedelta(days=1)
@@ -69,9 +69,12 @@ with open(data_file, 'r') as file:
     data = file.read()
 
 data_sheet = [ line.split('\t') for line in data.splitlines() ]
-for line in data_sheet:
-    line[0] = int(line[0])    # Unix time
-    line[1] = float(line[1])  # Charge percentage
+data_sheet = [
+    [
+        int(line[0]),   # Unix time
+        float(line[1])  # Charge percentage
+    ] for line in data_sheet
+]
 
 # Remove 'unknown' status
 data_sheet = [ line for line in data_sheet if line[2] != 'unknown' ]
@@ -94,12 +97,12 @@ print('### Data prepared, plotting ...')
 
 # %% Initialize graph
 fig, ax = plt.subplots()
-fig.canvas.manager.set_window_title(data_file.name)
+fig.canvas.manager.set_window_title(data_file.name)  # type: ignore
 plt.subplots_adjust(left=.1, bottom=.3)
 
 # Slider controls
 ax_history_max, ax_history_min = [
-    plt.axes([.2, y_pos, .6, 0.03])
+    plt.axes((.2, y_pos, .6, 0.03))
     for y_pos in [.15, .1]
 ]
 slider_history_max, slider_history_min = list(map(
@@ -115,13 +118,13 @@ slider_history_max, slider_history_min = list(map(
 ))
 
 # Reset button
-ax_reset = plt.axes([0.8, 0.025, 0.1, 0.04])
+ax_reset = plt.axes((0.8, 0.025, 0.1, 0.04))
 button_reset = Button(
     ax_reset, 'Reset', hovercolor='0.975'
 )
 
 # Switches
-ax_switch = plt.axes([0.15, 0.35, 0.2, 0.15])
+ax_switch = plt.axes((0.15, 0.35, 0.2, 0.15))
 switch_button = RadioButtons(
     ax_switch, (
         'Compressed',
@@ -261,7 +264,7 @@ class BatteryStat(object):
         ]
         # Set plot range
         self.plot_range = [t_start, t_end]
-        ax.set_xlim(self.plot_range)
+        ax.set_xlim(self.plot_range)  # type: ignore
 
         # New data
         new_data = [
