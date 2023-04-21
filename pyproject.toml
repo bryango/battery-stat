@@ -18,7 +18,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-battery-stat = 'battery_stat:run'
+battery-stat = 'battery_stat:show'
 
 [tool.ruff]
 select = ["E", "F", "W"]

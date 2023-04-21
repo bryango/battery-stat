@@ -391,8 +391,6 @@ class BatteryStat(object):
 stat = BatteryStat()
 stat.graph()
 
-def run():
-    plt.show()
-
+show = plt.show
 if __name__ == '__main__':
-    run()
+    show()
