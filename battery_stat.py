@@ -71,8 +71,9 @@ with open(data_file, 'r') as file:
 data_sheet = [ line.split('\t') for line in data.splitlines() ]
 data_sheet = [
     [
-        int(line[0]),   # Unix time
-        float(line[1])  # Charge percentage
+        int(line[0]),    # Unix time
+        float(line[1]),  # Charge percentage
+        line[2]          # Charge status
     ] for line in data_sheet
 ]
 
@@ -389,4 +390,9 @@ class BatteryStat(object):
 
 stat = BatteryStat()
 stat.graph()
-plt.show()
+
+def run():
+    plt.show()
+
+if __name__ == '__main__':
+    run()
